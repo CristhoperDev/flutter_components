@@ -9,6 +9,9 @@ class _InputPageState extends State<InputPage> {
   String _name = '';
   String _email = '';
   String _date = '';
+  String _selectedOption = 'Fly';
+
+  List<String> _powers = ['Fly', 'X-Rays', 'Super Breath', 'Super Strength'];
 
   TextEditingController _inputFieldBornDate = new TextEditingController();
 
@@ -28,6 +31,8 @@ class _InputPageState extends State<InputPage> {
           _createPassword(),
           Divider(),
           _createDate(context),
+          Divider(),
+          _createDropdown(),
           Divider(),
           _createPeople(),
           Divider(),
@@ -132,10 +137,40 @@ class _InputPageState extends State<InputPage> {
     }
   }
 
+  List<DropdownMenuItem<String>> getDropdownOptions() {
+    List<DropdownMenuItem<String>> list = new List();
+    _powers.forEach((power) {
+      list.add(DropdownMenuItem(
+        child: Text(power),
+        value: power,
+      ));
+    });
+    return list;
+  }
+
+  Widget _createDropdown() {
+    return Row(
+      children: <Widget>[
+        Icon(Icons.select_all),
+        SizedBox(width: 30.0),
+        Expanded(
+          child: DropdownButton(
+            value: _selectedOption,
+            items: getDropdownOptions(),
+            onChanged: (option) => setState(() {
+              _selectedOption = option;
+            }),
+          )
+        )
+      ],
+    );
+  }
+
   Widget _createPeople() {
     return ListTile(
       title: Text('Name: $_name'),
       subtitle: Text('Email: $_email' ),
+      trailing: Text(_selectedOption),
     );
   }
 }
