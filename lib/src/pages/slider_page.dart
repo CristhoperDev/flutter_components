@@ -7,6 +7,7 @@ class SliderPage extends StatefulWidget {
 
 class _SliderPageState extends State<SliderPage> {
   double _sliderValue = 100.0;
+  bool _checkBlock = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,8 @@ class _SliderPageState extends State<SliderPage> {
         child: Column(
           children: <Widget>[
             _createSlider(),
+            _createCheckbox(),
+            _createSwitch(),
             Expanded(
               child: _createImage()
             ),
@@ -35,7 +38,7 @@ class _SliderPageState extends State<SliderPage> {
       value: _sliderValue,
       min: 10.0,
       max: 400.0,
-      onChanged: ( value ) => setState(() {
+      onChanged: (_checkBlock) ? null : ( value ) => setState(() {
         _sliderValue = value;
       }),
     );
@@ -46,6 +49,32 @@ class _SliderPageState extends State<SliderPage> {
       image: NetworkImage('http://pngimg.com/uploads/batman/batman_PNG111.png'),
       width: _sliderValue,
       fit: BoxFit.contain,
+    );
+  }
+
+  Widget _createCheckbox() {
+    /*return Checkbox(
+      value: _checkBlock,
+      onChanged: (value) => setState(() {
+        _checkBlock = value;
+      }),
+    );*/
+    return CheckboxListTile(
+      title: Text('Block slider'),
+      value: _checkBlock,
+      onChanged: (value) => setState(() {
+        _checkBlock = value;
+      }),
+    );
+  }
+
+  Widget _createSwitch() {
+    return SwitchListTile(
+      title: Text('Block slider'),
+      value: _checkBlock,
+      onChanged: (value) => setState(() {
+        _checkBlock = value;
+      }),
     );
   }
 }
