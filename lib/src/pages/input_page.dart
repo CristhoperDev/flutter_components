@@ -8,6 +8,9 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   String _name = '';
   String _email = '';
+  String _date = '';
+
+  TextEditingController _inputFieldBornDate = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,8 @@ class _InputPageState extends State<InputPage> {
           _createEmail(),
           Divider(),
           _createPassword(),
+          Divider(),
+          _createDate(context),
           Divider(),
           _createPeople(),
           Divider(),
@@ -88,6 +93,42 @@ class _InputPageState extends State<InputPage> {
           _email = value;
         })
     );
+  }
+
+  Widget _createDate(BuildContext context) {
+    return TextField(
+      controller: _inputFieldBornDate,
+      enableInteractiveSelection: false,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20.0)
+        ),
+        hintText: 'Born date',
+        labelText: 'Born date',
+        suffixIcon: Icon(Icons.perm_contact_calendar),
+        icon: Icon(Icons.calendar_today)
+      ),
+      onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
+        _selectDate(context);
+      },
+    );
+  }
+
+  _selectDate(BuildContext context) async {
+    DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: new DateTime.now(),
+      firstDate: new DateTime(2018),
+      lastDate: new DateTime(2025)
+    );
+
+    if (picked != null) {
+      setState(() {
+        _date = picked.toString();
+        _inputFieldBornDate.text = _date;
+      });
+    }
   }
 
   Widget _createPeople() {
