@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class ListPage extends StatefulWidget {
@@ -11,6 +13,7 @@ class _ListPageState extends State<ListPage> {
 
   List<int> _numberList = new List();
   int _lastItem = 0;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -20,9 +23,17 @@ class _ListPageState extends State<ListPage> {
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        _add10Images();
+        //_add10Images();
+        fetchData();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _scrollController.dispose();
   }
 
   @override
@@ -30,7 +41,13 @@ class _ListPageState extends State<ListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('List'),
-      ),body: _createList(),
+      ),
+      body: Stack(
+        children: <Widget>[
+          _createList(),
+          _createLoading(),
+        ],
+      ),
     );
   }
 
@@ -56,5 +73,47 @@ class _ListPageState extends State<ListPage> {
         _numberList.add(_lastItem);
       }
     });
+  }
+
+  Future<Null> fetchData() async{
+    _isLoading = true;
+    setState(() {
+
+    });
+
+    final duration = new Duration(seconds: 2);
+    new Timer(duration, httpResponse);
+  }
+
+  void httpResponse() {
+    _isLoading = false;
+
+    _scrollController.animateTo(
+      _scrollController.position.pixels + 100,
+      duration: Duration(milliseconds: 250),
+      curve: Curves.fastOutSlowIn
+    );
+
+    _add10Images();
+  }
+
+  Widget _createLoading() {
+    if (_isLoading) {
+      return Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CircularProgressIndicator()
+            ],
+          ),
+          SizedBox(height: 15.0)
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
 }
